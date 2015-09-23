@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ApacheJMeter_tcp_fake">
+    <output-path>$PROJECT_DIR$/out/artifacts/ApacheJMeter_tcp_fake</output-path>
+    <root id="archive" name="ApacheJMeter_tcp_fake.jar">
+      <element id="dir-copy" path="$PROJECT_DIR$/out/production/jmeter_test" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="ApacheJMeter_core1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ApacheJMeter_core.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ApacheJMeter_java.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ApacheJMeter_tcp.jar!/" />
+      <root url="jar://$PROJECT_DIR$/commons-io-2.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jorphan.jar!/" />
+      <root url="jar://$PROJECT_DIR$/logkit-2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
