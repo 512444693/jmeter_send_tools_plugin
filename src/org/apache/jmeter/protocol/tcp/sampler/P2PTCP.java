@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.IllegalFormatException;
+import java.util.Date;
 
 import com.zm.data.BaseType;
 import com.zm.mgr.DataMgr;
@@ -85,16 +85,22 @@ public class P2PTCP extends AbstractTCPClient {
      */
     @Override
     public void write(OutputStream os, String hexEncodedBinary) throws IOException{
+        byte[] data = null;
         try{
-            os.write(stringToP2PTCP(hexEncodedBinary));
+            data = stringToP2PTCP(hexEncodedBinary);
+            os.write(data);
         }catch (Exception e ){
-            JOptionPane.showMessageDialog(null, e.getMessage(), "P2P消息", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "P2P消息【发包】", JOptionPane.ERROR_MESSAGE);
             throw new IllegalStateException(e.getMessage());
         }
 
         os.flush();
         if(log.isDebugEnabled()) {
             log.debug("Wrote: " + hexEncodedBinary);
+            System.out.println("============发送==========" + new Date() + "==================");
+            System.out.println();
+            System.out.println(BU.bytes2HexGoodLook(data));
+            System.out.println();
         }
     }
 
@@ -132,6 +138,10 @@ public class P2PTCP extends AbstractTCPClient {
             final String hexString = JOrphanUtils.baToHexString(w.toByteArray());
             if(log.isDebugEnabled()) {
                 log.debug("Read: " + w.size() + "\n" + hexString);
+                System.out.println("============接收=========="+ new Date().toString()+"==================");
+                System.out.println();
+                System.out.println(BU.bytes2HexGoodLook(BU.hex2Bytes(hexString)));
+                System.out.println();
             }
             return hexString;
         } catch (IOException e) {
