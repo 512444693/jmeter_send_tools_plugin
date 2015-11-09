@@ -95,6 +95,7 @@ public class P2PTCP extends AbstractTCPClient {
         }
 
         os.flush();
+
         if(log.isDebugEnabled()) {
             log.debug("Wrote: " + hexEncodedBinary);
             System.out.println("============发送TCP==========" + new Date() + "==================");

@@ -17,6 +17,8 @@ import java.util.Date;
  * Created by zhangmin on 2015/11/9.
  */
 public class P2PUDP implements UDPTrafficDecoder {
+    private static final Logger log = LoggingManager.getLoggerForClass();
+
     @Override
     public ByteBuffer encode(String s) {
         byte[] data = new byte[0];
@@ -29,20 +31,24 @@ public class P2PUDP implements UDPTrafficDecoder {
             throw new IllegalStateException(e.getMessage());
         }
 
-        System.out.println("============发送UDP==========" + new Date() + "==================");
-        System.out.println();
-        System.out.println(BU.bytes2HexGoodLook(data));
-        System.out.println();
+        if(log.isDebugEnabled()){
+            System.out.println("============发送UDP==========" + new Date() + "==================");
+            System.out.println();
+            System.out.println(BU.bytes2HexGoodLook(data));
+            System.out.println();
+        }
 
         return ByteBuffer.wrap(data);
     }
 
     @Override
     public byte[] decode(byte[] bytes) {
-        System.out.println("============接收UDP=========="+ new Date().toString()+"==================");
-        System.out.println();
-        System.out.println(BU.bytes2HexGoodLook(bytes));
-        System.out.println();
+        if(log.isDebugEnabled()){
+            System.out.println("============接收UDP=========="+ new Date().toString()+"==================");
+            System.out.println();
+            System.out.println(BU.bytes2HexGoodLook(bytes));
+            System.out.println();
+        }
 
         return JOrphanUtils.baToHexString(bytes).getBytes();
     }
