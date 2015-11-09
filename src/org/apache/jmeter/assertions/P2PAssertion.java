@@ -21,38 +21,29 @@
  * and matches it with the MD5 hex provided.
  * The assertion will fail when the expected hex is different from the <br/>
  * one calculated from the response OR when the expected hex is left empty.
- * 
+ *
  */
 package org.apache.jmeter.assertions;
 
 import java.io.Serializable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
 
-import com.zm.data.BaseType;
 import com.zm.mgr.DataMgr;
 import com.zm.mgr.UI;
 import com.zm.utils.BU;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.property.StringProperty;
-import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.logging.LoggingManager;
-import org.apache.jorphan.util.JOrphanUtils;
 import org.apache.log.Logger;
 
-import javax.swing.*;
-
-public class P2PTCPAssertion extends AbstractTestElement implements Serializable, Assertion {
+public class P2PAssertion extends AbstractTestElement implements Serializable, Assertion {
 
     private static final long serialVersionUID = 240L;
 
     private static final Logger log = LoggingManager.getLoggerForClass();
 
     /** Key for storing assertion-informations in the jmx-file. */
-    private static final String P2PTCP_KEY = "P2PTCPAssertion.txt";
+    private static final String P2P_KEY = "P2PAssertion.txt";
 
     /*
      * @param response @return
@@ -73,7 +64,7 @@ public class P2PTCPAssertion extends AbstractTestElement implements Serializable
         }
 
         // no point in checking if we don't have anything to compare against
-        if (getP2PTCPTxt().replaceAll("\\s", "").equals("")) {
+        if (getP2PTxt().replaceAll("\\s", "").equals("")) {
             result.setError(false);
             result.setFailure(true);
             result.setFailureMessage("没有设置预期结果");
@@ -84,19 +75,19 @@ public class P2PTCPAssertion extends AbstractTestElement implements Serializable
 
         // String md5Result = DigestUtils.md5Hex(resultData);
 
-        if (!md5Result.equalsIgnoreCase(getP2PTCPTxt())) {
+        if (!md5Result.equalsIgnoreCase(getP2PTxt())) {
             result.setFailure(true);
 
-            Object[] arguments = { md5Result, getP2PTCPTxt() };
-            String message = MessageFormat.format(JMeterUtils.getResString("P2PTCP_assertion_failure"), arguments); // $NON-NLS-1$
+            Object[] arguments = { md5Result, getP2PTxt() };
+            String message = MessageFormat.format(JMeterUtils.getResString("P2P_assertion_failure"), arguments); // $NON-NLS-1$
             result.setFailureMessage(message);
 
         }
         */
-        DataMgr expect = new DataMgr(UI.strToDataList(getP2PTCPTxt()));
+        DataMgr expect = new DataMgr(UI.strToDataList(getP2PTxt()));
         expect.encode();
 
-        DataMgr fact = new DataMgr(resultData, UI.strToDataList(getP2PTCPTxt()));
+        DataMgr fact = new DataMgr(resultData, UI.strToDataList(getP2PTxt()));
         fact.decode();
 
         try {
@@ -110,12 +101,12 @@ public class P2PTCPAssertion extends AbstractTestElement implements Serializable
         return result;
     }
 
-    public void setP2PTCPTxt(String hex) {
-        setProperty(new StringProperty(P2PTCPAssertion.P2PTCP_KEY, hex));
+    public void setP2PTxt(String hex) {
+        setProperty(new StringProperty(P2PAssertion.P2P_KEY, hex));
     }
 
-    public String getP2PTCPTxt() {
-        return getPropertyAsString(P2PTCPAssertion.P2PTCP_KEY);
+    public String getP2PTxt() {
+        return getPropertyAsString(P2PAssertion.P2P_KEY);
     }
 
     // package protected so can be accessed by test class

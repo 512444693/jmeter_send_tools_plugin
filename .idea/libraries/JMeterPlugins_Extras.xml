@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="JMeterPlugins-Extras">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/JMeterPlugins-Extras.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

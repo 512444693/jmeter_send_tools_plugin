@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/jmeter_test.iml" filepath="$PROJECT_DIR$/jmeter_test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jmeter_send_tools_plugin.iml" filepath="$PROJECT_DIR$/jmeter_send_tools_plugin.iml" />
     </modules>
   </component>
 </project>

@@ -26,12 +26,12 @@ import java.awt.BorderLayout;
 
 import javax.swing.*;
 
-import org.apache.jmeter.assertions.P2PTCPAssertion;
+import org.apache.jmeter.assertions.P2PAssertion;
 import org.apache.jmeter.gui.util.HorizontalPanel;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.util.JMeterUtils;
 
-public class P2PTCPAssertionGUI extends AbstractAssertionGui {
+public class P2PAssertionGUI extends AbstractAssertionGui {
 
     private static final long serialVersionUID = 240L;
 
@@ -41,7 +41,7 @@ public class P2PTCPAssertionGUI extends AbstractAssertionGui {
 
     private JRadioButton equalBox;
 
-    public P2PTCPAssertionGUI() {
+    public P2PAssertionGUI() {
         init();
     }
 
@@ -57,9 +57,9 @@ public class P2PTCPAssertionGUI extends AbstractAssertionGui {
         // USER_INPUT
         HorizontalPanel md5HexPanel = new HorizontalPanel();
         md5HexPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                JMeterUtils.getResString("P2PTCP_assertion_md5hex_test"))); // $NON-NLS-1$
+                JMeterUtils.getResString("P2P_assertion_md5hex_test"))); // $NON-NLS-1$
 
-        md5HexPanel.add(new JLabel(JMeterUtils.getResString("P2PTCP_assertion_label"))); //$NON-NLS-1$
+        md5HexPanel.add(new JLabel(JMeterUtils.getResString("P2P_assertion_label"))); //$NON-NLS-1$
 
         p2pTcpInput = new JTextArea(15,80);
         // md5HexInput.addFocusListener(this);
@@ -73,13 +73,13 @@ public class P2PTCPAssertionGUI extends AbstractAssertionGui {
     @Override
     public void configure(TestElement el) {
         super.configure(el);
-        P2PTCPAssertion assertion = (P2PTCPAssertion) el;
-        this.p2pTcpInput.setText(String.valueOf(assertion.getP2PTCPTxt()));
+        P2PAssertion assertion = (P2PAssertion) el;
+        this.p2pTcpInput.setText(String.valueOf(assertion.getP2PTxt()));
     }
 
     @Override
     public String getLabelResource() {
-        return "P2PTCP_assertion_title"; // $NON-NLS-1$
+        return "P2P_assertion_title"; // $NON-NLS-1$
     }
 
     /*
@@ -88,7 +88,7 @@ public class P2PTCPAssertionGUI extends AbstractAssertionGui {
     @Override
     public TestElement createTestElement() {
 
-        P2PTCPAssertion el = new P2PTCPAssertion();
+        P2PAssertion el = new P2PAssertion();
         modifyTestElement(el);
         return el;
 
@@ -105,7 +105,7 @@ public class P2PTCPAssertionGUI extends AbstractAssertionGui {
         if (md5HexString == null || md5HexString.length() == 0) {
             md5HexString = "";
         }
-        ((P2PTCPAssertion) element).setP2PTCPTxt(md5HexString);
+        ((P2PAssertion) element).setP2PTxt(md5HexString);
     }
 
     /**

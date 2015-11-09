@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="p2p_tcp">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/artifacts/p2p_tcp/p2p_tcp.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

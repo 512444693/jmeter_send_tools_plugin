@@ -97,7 +97,7 @@ public class P2PTCP extends AbstractTCPClient {
         os.flush();
         if(log.isDebugEnabled()) {
             log.debug("Wrote: " + hexEncodedBinary);
-            System.out.println("============发送==========" + new Date() + "==================");
+            System.out.println("============发送TCP==========" + new Date() + "==================");
             System.out.println();
             System.out.println(BU.bytes2HexGoodLook(data));
             System.out.println();
@@ -138,7 +138,7 @@ public class P2PTCP extends AbstractTCPClient {
             final String hexString = JOrphanUtils.baToHexString(w.toByteArray());
             if(log.isDebugEnabled()) {
                 log.debug("Read: " + w.size() + "\n" + hexString);
-                System.out.println("============接收=========="+ new Date().toString()+"==================");
+                System.out.println("============接收TCP=========="+ new Date().toString()+"==================");
                 System.out.println();
                 System.out.println(BU.bytes2HexGoodLook(BU.hex2Bytes(hexString)));
                 System.out.println();

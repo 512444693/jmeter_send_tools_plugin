@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="P2PPlugin">
+    <output-path>$PROJECT_DIR$/out/artifacts/P2PPlugin</output-path>
+    <root id="archive" name="P2PPlugin.jar">
+      <element id="dir-copy" path="$PROJECT_DIR$/out/production/jmeter_send_tools_plugin" />
+    </root>
+  </artifact>
+</component>
