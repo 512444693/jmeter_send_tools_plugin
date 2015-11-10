@@ -128,11 +128,12 @@ public class P2PTCP extends AbstractTCPClient {
         try {
             byte[] buffer = new byte[4096];
             int x = 0;
-            while ((x = is.read(buffer)) > -1) {
+            //while ((x = is.read(buffer)) > -1) {
+            if ((x = is.read(buffer)) > -1) {
                 w.write(buffer, 0, x);
-                if (useEolByte && (buffer[x - 1] == eolByte)) {
+                /*if (useEolByte && (buffer[x - 1] == eolByte)) {
                     break;
-                }
+                }*/
             }
 
             IOUtils.closeQuietly(w); // For completeness
