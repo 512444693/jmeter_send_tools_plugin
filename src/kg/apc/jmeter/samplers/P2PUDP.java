@@ -1,8 +1,6 @@
 package kg.apc.jmeter.samplers;
 
-import com.zm.data.BaseType;
-import com.zm.mgr.DataMgr;
-import com.zm.mgr.UI;
+import com.zm.message.Message;
 import com.zm.utils.BU;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.jorphan.util.JOrphanUtils;
@@ -23,9 +21,8 @@ public class P2PUDP implements UDPTrafficDecoder {
     public ByteBuffer encode(String s) {
         byte[] data = new byte[0];
         try{
-            ArrayList<BaseType> dataList = UI.strToDataList(s);
-            DataMgr dataMgr = new DataMgr(dataList);
-            data = dataMgr.encode();
+            Message message = new Message(s);
+            data = message.encode();
         }catch (Exception e ){
             JOptionPane.showMessageDialog(null, e.getMessage(), "P2P消息【发包】", JOptionPane.ERROR_MESSAGE);
             throw new IllegalStateException(e.getMessage());

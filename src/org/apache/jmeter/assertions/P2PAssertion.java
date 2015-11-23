@@ -27,8 +27,8 @@ package org.apache.jmeter.assertions;
 
 import java.io.Serializable;
 
-import com.zm.mgr.DataMgr;
-import com.zm.mgr.UI;
+import com.zm.Field.CompareResult;
+import com.zm.message.Message;
 import com.zm.utils.BU;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.testelement.AbstractTestElement;
@@ -54,50 +54,54 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
 
         AssertionResult result = new AssertionResult(getName());
         result.setFailure(false);
-        byte[] resultData = BU.hex2Bytes(new String(response.getResponseData()));
+        try{
+            byte[] resultData = BU.hex2Bytes(new String(response.getResponseData()));
 
-        if (resultData.length == 0) {
-            result.setError(false);
-            result.setFailure(true);
-            result.setFailureMessage("Response was null");
-            return result;
-        }
+            if (resultData.length == 0) {
+                result.setError(false);
+                result.setFailure(true);
+                result.setFailureMessage("Response was null");
+                return result;
+            }
 
-        // no point in checking if we don't have anything to compare against
-        if (getP2PTxt().replaceAll("\\s", "").equals("")) {
-            result.setError(false);
-            result.setFailure(true);
-            result.setFailureMessage("没有设置预期结果");
-            return result;
-        }
-/*
-        String md5Result = baMD5Hex(resultData);
+            // no point in checking if we don't have anything to compare against
+            if (getP2PTxt().replaceAll("\\s", "").equals("")) {
+                result.setError(false);
+                result.setFailure(true);
+                result.setFailureMessage("没有设置预期结果");
+                return result;
+            }
+    /*
+            String md5Result = baMD5Hex(resultData);
 
-        // String md5Result = DigestUtils.md5Hex(resultData);
+            // String md5Result = DigestUtils.md5Hex(resultData);
 
-        if (!md5Result.equalsIgnoreCase(getP2PTxt())) {
-            result.setFailure(true);
+            if (!md5Result.equalsIgnoreCase(getP2PTxt())) {
+                result.setFailure(true);
 
-            Object[] arguments = { md5Result, getP2PTxt() };
-            String message = MessageFormat.format(JMeterUtils.getResString("P2P_assertion_failure"), arguments); // $NON-NLS-1$
-            result.setFailureMessage(message);
+                Object[] arguments = { md5Result, getP2PTxt() };
+                String message = MessageFormat.format(JMeterUtils.getResString("P2P_assertion_failure"), arguments); // $NON-NLS-1$
+                result.setFailureMessage(message);
 
-        }
-        */
-        DataMgr expect = new DataMgr(UI.strToDataList(getP2PTxt()));
-        expect.encode();
+            }
+            */
 
-        DataMgr fact = new DataMgr(resultData, UI.strToDataList(getP2PTxt()));
-        fact.decode();
+            Message expect = new Message(getP2PTxt());
+            expect.encode();
 
-        try {
-            expect.equals(fact);
+            Message fact = new Message(getP2PTxt(), resultData);
+            fact.decode();
+
+            CompareResult compareResult = expect.compare(fact);
+            if(!compareResult.equal){
+                result.setFailure(true);
+                result.setFailureMessage(compareResult.msg);
+                return result;
+            }
         }catch (Exception e){
-            result.setFailure(true);
-            result.setFailureMessage(e.getMessage());
-            return result;
+            e.printStackTrace();
+            throw new IllegalStateException(e.getMessage());
         }
-
         return result;
     }
 

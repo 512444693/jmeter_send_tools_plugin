@@ -31,9 +31,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.zm.data.BaseType;
-import com.zm.mgr.DataMgr;
-import com.zm.mgr.UI;
+import com.zm.message.Message;
 import com.zm.utils.BU;
 import org.apache.commons.io.IOUtils;
 import org.apache.jmeter.util.JMeterUtils;
@@ -73,9 +71,8 @@ public class P2PTCP extends AbstractTCPClient {
      * @throws IllegalArgumentException if string is not an even number of hex digits
      */
     public static final byte[] stringToP2PTCP(String string) {
-        ArrayList<BaseType> dataList = UI.strToDataList(string);
-        DataMgr dataMgr = new DataMgr(dataList);
-        return dataMgr.encode();
+        Message message = new Message(string);
+        return message.encode();
     }
 
     /**
