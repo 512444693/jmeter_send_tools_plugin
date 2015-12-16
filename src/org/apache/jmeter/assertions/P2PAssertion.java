@@ -92,10 +92,16 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
             Message fact = new Message(getP2PTxt(), resultData);
             fact.decode();
 
+            if(log.isDebugEnabled()) {
+                System.out.println(fact);
+            }
+
             CompareResult compareResult = expect.compare(fact);
             if(!compareResult.equal){
+                String expectStr = "\r\n================预期================\r\n" + expect;
+                String factStr = "\r\n================实际================\r\n" + fact;
                 result.setFailure(true);
-                result.setFailureMessage(compareResult.msg);
+                result.setFailureMessage(compareResult.msg + expectStr + factStr);
                 return result;
             }
         }catch (Exception e){
