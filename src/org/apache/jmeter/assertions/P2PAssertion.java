@@ -94,6 +94,8 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
 
             if(log.isDebugEnabled()) {
                 System.out.println(fact);
+                if(fact.dataCntLeftToDecode() > 0)
+                    System.out.println("还剩" + fact.dataCntLeftToDecode() + "字节数据没有解码");
             }
 
             CompareResult compareResult = expect.compare(fact);
