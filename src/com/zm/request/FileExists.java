@@ -18,13 +18,13 @@ import java.rmi.RemoteException;
  */
 public class FileExists extends AbstractJavaSamplerClient {
     private static final Logger LOG = LoggingManager.getLoggerForClass();
-    private String[] queryTypes = {"文件是否存在", "目录是否存在", "目录下是否有文件"};
+    private String[] queryTypes = {"文件是否存在", "目录是否存在", "目录下是否有文件", "文件列表"};
     private String samplerData = "";
 
     public Arguments getDefaultParameters() {
         Arguments params = new Arguments();
         params.addArgument("rmiServer", "127.0.0.1");
-        params.addArgument("type", "0:文件存在/1:目录存在/2:目录下有文件");
+        params.addArgument("type", "0:文件存在/1:目录存在/2:目录下有文件/3:列出文件列表");
         params.addArgument("filePath", "");
         return params;
     }
@@ -37,12 +37,12 @@ public class FileExists extends AbstractJavaSamplerClient {
         try{
             type = Integer.parseInt(javaSamplerContext.getParameter("type"));
         }catch (Exception e){
-            sr.setResponseMessage("类型错误，应为0、1或2");
+            sr.setResponseMessage("类型错误，应为0、1、2或3");
             sr.setSuccessful(false);
             return sr;
         }
-        if(type > 2 || type < 0){
-            sr.setResponseMessage("类型错误，应为0、1或2");
+        if(type > 3 || type < 0){
+            sr.setResponseMessage("类型错误，应为0、1、2或3");
             sr.setSuccessful(false);
             return sr;
         }
@@ -52,34 +52,34 @@ public class FileExists extends AbstractJavaSamplerClient {
         samplerData = "请求查看" + filePath + queryTypes[type];
         sr.setSamplerData(samplerData);
         if(LOG.isDebugEnabled()) {
-            System.out.print(samplerData);
+            System.out.println(samplerData);
         }
 
         sr.sampleStart();
         Exists exists = null;
-        Boolean result = false;
+        String  result = "false";
         try {
             exists = (Exists) Naming.lookup("rmi://" + rmiServer + "/exists");
             switch (type){
                 case 0:
-                    result = exists.fileExist(filePath);
+                    result = String.valueOf(exists.fileExist(filePath));
                     break;
                 case 1:
-                    result = exists.DirectoryExist(filePath);
+                    result = String.valueOf(exists.directoryExist(filePath));
                     break;
                 case 2:
-                    result = exists.DirectoryHasFiles(filePath);
+                    result = String.valueOf(exists.directoryHasFiles(filePath));
+                    break;
+                case 3:
+                    result = exists.listDir(filePath);
                     break;
             }
-            sr.setResponseData(String.valueOf(result), null);
+            sr.setResponseData(result, null);
             sr.setDataEncoding(SampleResult.TEXT);
             sr.setSuccessful(true);
             sr.sampleEnd();
             if(LOG.isDebugEnabled()) {
-                if(result)
-                    System.out.println("：存在");
-                else
-                    System.out.println("：不存在");
+                System.out.println(result);
             }
         } catch (Exception e) {
             sr.setResponseMessage("远程rmi服务器连接错误");
