@@ -52,7 +52,7 @@ public class FileExists extends AbstractJavaSamplerClient {
         samplerData = "请求查看" + filePath + queryTypes[type];
         sr.setSamplerData(samplerData);
         if(LOG.isDebugEnabled()) {
-            System.out.println(samplerData);
+            System.out.print(samplerData);
         }
 
         sr.sampleStart();
