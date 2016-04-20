@@ -78,8 +78,8 @@ public class P2PAssertionGUI extends AbstractAssertionGui {
         // md5HexInput.addFocusListener(this);
         propertyPanel.add(propertyInput);
 
-        mainPanel.add(md5HexPanel, BorderLayout.NORTH);
-        mainPanel.add(propertyPanel, BorderLayout.CENTER);
+        mainPanel.add(md5HexPanel, BorderLayout.CENTER);
+        mainPanel.add(propertyPanel, BorderLayout.SOUTH);
         add(mainPanel, BorderLayout.CENTER);
 
     }
