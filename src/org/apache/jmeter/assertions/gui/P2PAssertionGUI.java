@@ -37,6 +37,8 @@ public class P2PAssertionGUI extends AbstractAssertionGui {
 
     private JTextArea p2pTcpInput;
 
+    private JTextField propertyInput;
+
     private JRadioButton resBox;
 
     private JRadioButton equalBox;
@@ -65,7 +67,19 @@ public class P2PAssertionGUI extends AbstractAssertionGui {
         // md5HexInput.addFocusListener(this);
         md5HexPanel.add(p2pTcpInput);
 
+        //
+        HorizontalPanel propertyPanel = new HorizontalPanel();
+        propertyPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+                "Property Save to vars(comma-delimited)")); // $NON-NLS-1$
+
+        propertyPanel.add(new JLabel("Property")); //$NON-NLS-1$
+
+        propertyInput = new JTextField(25);
+        // md5HexInput.addFocusListener(this);
+        propertyPanel.add(propertyInput);
+
         mainPanel.add(md5HexPanel, BorderLayout.NORTH);
+        mainPanel.add(propertyPanel, BorderLayout.CENTER);
         add(mainPanel, BorderLayout.CENTER);
 
     }
@@ -75,6 +89,7 @@ public class P2PAssertionGUI extends AbstractAssertionGui {
         super.configure(el);
         P2PAssertion assertion = (P2PAssertion) el;
         this.p2pTcpInput.setText(String.valueOf(assertion.getP2PTxt()));
+        this.propertyInput.setText(String.valueOf(assertion.getPropertyTxt()));
     }
 
     @Override
@@ -106,6 +121,13 @@ public class P2PAssertionGUI extends AbstractAssertionGui {
             md5HexString = "";
         }
         ((P2PAssertion) element).setP2PTxt(md5HexString);
+
+        String propertyString = this.propertyInput.getText();
+        // initialize to empty string, this will fail the assertion
+        if (propertyString == null || propertyString.length() == 0) {
+            propertyString = "";
+        }
+        ((P2PAssertion) element).setPropertyTxt(propertyString);
     }
 
     /**
@@ -116,5 +138,6 @@ public class P2PAssertionGUI extends AbstractAssertionGui {
         super.clearGui();
 
         p2pTcpInput.setText(""); //$NON-NLS-1$
+        propertyInput.setText("");
     }
 }

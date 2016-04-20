@@ -26,6 +26,8 @@
 package org.apache.jmeter.assertions;
 
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.zm.Field.CompareResult;
 import com.zm.message.Message;
@@ -33,6 +35,8 @@ import com.zm.utils.BU;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.property.StringProperty;
+import org.apache.jmeter.threads.JMeterContext;
+import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
 
@@ -112,6 +116,28 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
                 result.setFailureMessage(compareResult.msg + expectStr + factStr);
                 return result;
             }
+
+            String propertyStr = "";
+            if(!(propertyStr = getPropertyTxt().trim()).equals("")){
+                String[] pNames = propertyStr.split(",");
+                if(pNames.length > 0){
+                    JMeterContext context = getThreadContext();
+                    JMeterVariables vars = context.getVariables();
+                    Pattern pattern = null;
+                    Matcher matcher = null;
+                    for(int i = 0; i < pNames.length; i++){
+                        //至少含一个非空白字符
+                        pattern = Pattern.compile(pNames[i] + "=(\\S+)\r\n",  Pattern.CASE_INSENSITIVE + Pattern.UNICODE_CASE);
+                        matcher = pattern.matcher(fact.toString());
+                        if(matcher.find()){
+                            vars.put(pNames[i], matcher.group(1));
+                        }else{
+                            vars.put(pNames[i], "NOT_FOUND");
+                        }
+                    }
+                }
+            }
+
         }catch (Exception e){
             e.printStackTrace();
             throw new IllegalStateException(e.getMessage());
@@ -125,6 +151,14 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
 
     public String getP2PTxt() {
         return getPropertyAsString(P2PAssertion.P2P_KEY);
+    }
+
+    public void setPropertyTxt(String value){
+        setProperty(new StringProperty("Property.txt", value));
+    }
+
+    public String getPropertyTxt() {
+        return getPropertyAsString("Property.txt");
     }
 
     // package protected so can be accessed by test class
