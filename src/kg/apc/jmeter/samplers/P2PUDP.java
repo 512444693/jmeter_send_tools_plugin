@@ -29,6 +29,8 @@ public class P2PUDP implements UDPTrafficDecoder {
         }
 
         if(log.isDebugEnabled()){
+            log.debug("Write: \n" + s);
+            log.debug("Write(hex): \n" + BU.bytes2Hex(data));
             System.out.println("============发送UDP==========" + new Date() + "==================");
             System.out.println();
             System.out.println(BU.bytes2HexGoodLook(data));
@@ -41,6 +43,7 @@ public class P2PUDP implements UDPTrafficDecoder {
     @Override
     public byte[] decode(byte[] bytes) {
         if(log.isDebugEnabled()){
+            log.debug("Read: " + bytes.length + "(size)\n" + BU.bytes2Hex(bytes));
             System.out.println("============接收UDP=========="+ new Date().toString()+"==================");
             System.out.println();
             System.out.println(BU.bytes2HexGoodLook(bytes));
