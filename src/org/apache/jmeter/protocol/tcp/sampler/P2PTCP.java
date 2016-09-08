@@ -55,6 +55,7 @@ public class P2PTCP extends AbstractTCPClient {
 
     private static final int eomInt = JMeterUtils.getPropDefault("tcp.BinaryTCPClient.eomByte", 1000); // $NON_NLS-1$
 
+    private int readLoopCount = 1;
     public P2PTCP() {
         super();
         setEolByte(eomInt);
@@ -82,6 +83,11 @@ public class P2PTCP extends AbstractTCPClient {
      */
     @Override
     public void write(OutputStream os, String hexEncodedBinary) throws IOException{
+        try {
+            //从第一行中得到从socket读取数据的次数
+            readLoopCount = Integer.parseInt(hexEncodedBinary.split("\n")[0]);
+        } catch (Exception e) {
+        }
         byte[] data = null;
         try{
             data = stringToP2PTCP(hexEncodedBinary);
@@ -126,12 +132,16 @@ public class P2PTCP extends AbstractTCPClient {
         try {
             byte[] buffer = new byte[4096];
             int x = 0;
-            //while ((x = is.read(buffer)) > -1) {
-            if ((x = is.read(buffer)) > -1) {
+            /*while ((x = is.read(buffer)) > -1) {
                 w.write(buffer, 0, x);
-                /*if (useEolByte && (buffer[x - 1] == eolByte)) {
+                if (useEolByte && (buffer[x - 1] == eolByte)) {
                     break;
-                }*/
+                }
+            }*/
+            for(int i = 0; i < readLoopCount; i++) {
+                if ((x = is.read(buffer)) > -1) {
+                    w.write(buffer, 0, x);
+                }
             }
 
             IOUtils.closeQuietly(w); // For completeness
