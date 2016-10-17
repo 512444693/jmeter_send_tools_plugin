@@ -120,20 +120,24 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
             String propertyStr = "";
             if(!(propertyStr = getPropertyTxt().trim()).equals("")){
                 String[] pNames = propertyStr.split(",");
+                String factString = fact.toString();
                 if(pNames.length > 0){
-                    JMeterContext context = getThreadContext();
-                    JMeterVariables vars = context.getVariables();
+                    JMeterVariables vars = getThreadContext().getVariables();
                     Pattern pattern = null;
                     Matcher matcher = null;
                     for(int i = 0; i < pNames.length; i++){
-                        //至少含一个非空白字符
-                        pattern = Pattern.compile(pNames[i] + "=(\\S+)\r\n",  Pattern.CASE_INSENSITIVE + Pattern.UNICODE_CASE);
-                        matcher = pattern.matcher(fact.toString());
-                        if(matcher.find()){
-                            vars.put(pNames[i], matcher.group(1));
-                        }else{
-                            vars.put(pNames[i], "NOT_FOUND");
+                        //至少含一个非空白字符，可处理数组
+                        pattern = Pattern.compile(pNames[i] + "[0-9]*=(\\S+)\r\n",  Pattern.CASE_INSENSITIVE + Pattern.UNICODE_CASE);
+                        matcher = pattern.matcher(factString);
+                        //循环将数组放入相同的变量名中，制表符分隔
+                        String value = "";
+                        while(matcher.find()){
+                            value += matcher.group(1) + "\t";
                         }
+                        if ((value = value.trim()).equals("")) {
+                            value = "NOT_FOUND";
+                        }
+                        vars.put(pNames[i], value);
                     }
                 }
             }
