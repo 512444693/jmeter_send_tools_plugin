@@ -143,7 +143,7 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
             }
 
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             result.setFailure(true);
             result.setFailureMessage("异常：" + e.getMessage());
         }
