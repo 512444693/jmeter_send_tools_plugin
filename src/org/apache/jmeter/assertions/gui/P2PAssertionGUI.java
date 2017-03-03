@@ -39,9 +39,7 @@ public class P2PAssertionGUI extends AbstractAssertionGui {
 
     private JTextField propertyInput;
 
-    private JRadioButton resBox;
-
-    private JRadioButton equalBox;
+    private JCheckBox saveBodyToFile;
 
     public P2PAssertionGUI() {
         init();
@@ -70,13 +68,16 @@ public class P2PAssertionGUI extends AbstractAssertionGui {
         //
         HorizontalPanel propertyPanel = new HorizontalPanel();
         propertyPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                "Property Save to vars(comma-delimited)")); // $NON-NLS-1$
+                "Additional options")); // $NON-NLS-1$
 
-        propertyPanel.add(new JLabel("Property")); //$NON-NLS-1$
+        propertyPanel.add(new JLabel("Property saved to vars(comma-delimited)")); //$NON-NLS-1$
 
         propertyInput = new JTextField(25);
         // md5HexInput.addFocusListener(this);
         propertyPanel.add(propertyInput);
+
+        saveBodyToFile = new JCheckBox("Save body to file");
+        propertyPanel.add(saveBodyToFile);
 
         mainPanel.add(md5HexPanel, BorderLayout.CENTER);
         mainPanel.add(propertyPanel, BorderLayout.SOUTH);
@@ -90,6 +91,7 @@ public class P2PAssertionGUI extends AbstractAssertionGui {
         P2PAssertion assertion = (P2PAssertion) el;
         this.p2pTcpInput.setText(String.valueOf(assertion.getP2PTxt()));
         this.propertyInput.setText(String.valueOf(assertion.getPropertyTxt()));
+        this.saveBodyToFile.setSelected(assertion.getSaveBodyToFile());
     }
 
     @Override
@@ -128,6 +130,8 @@ public class P2PAssertionGUI extends AbstractAssertionGui {
             propertyString = "";
         }
         ((P2PAssertion) element).setPropertyTxt(propertyString);
+
+        ((P2PAssertion) element).setSaveBodyToFile(this.saveBodyToFile.isSelected());
     }
 
     /**
@@ -139,5 +143,6 @@ public class P2PAssertionGUI extends AbstractAssertionGui {
 
         p2pTcpInput.setText(""); //$NON-NLS-1$
         propertyInput.setText("");
+        saveBodyToFile.setSelected(false);
     }
 }

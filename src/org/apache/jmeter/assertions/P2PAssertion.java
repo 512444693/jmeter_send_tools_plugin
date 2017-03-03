@@ -25,7 +25,11 @@
  */
 package org.apache.jmeter.assertions;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +38,7 @@ import com.zm.message.Message;
 import com.zm.utils.BU;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.testelement.AbstractTestElement;
+import org.apache.jmeter.testelement.property.BooleanProperty;
 import org.apache.jmeter.testelement.property.StringProperty;
 import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterVariables;
@@ -59,7 +64,7 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
         AssertionResult result = new AssertionResult(getName());
         result.setFailure(false);
         try{
-            byte[] resultData = BU.hex2Bytes(new String(response.getResponseData()));
+            byte[] resultData = BU.hex2Bytes(response.getResponseDataAsString());
 
             if (resultData.length == 0) {
                 result.setError(false);
@@ -75,20 +80,6 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
                 result.setFailureMessage("没有设置预期结果");
                 return result;
             }
-    /*
-            String md5Result = baMD5Hex(resultData);
-
-            // String md5Result = DigestUtils.md5Hex(resultData);
-
-            if (!md5Result.equalsIgnoreCase(getP2PTxt())) {
-                result.setFailure(true);
-
-                Object[] arguments = { md5Result, getP2PTxt() };
-                String message = MessageFormat.format(JMeterUtils.getResString("P2P_assertion_failure"), arguments); // $NON-NLS-1$
-                result.setFailureMessage(message);
-
-            }
-            */
 
             Message expect = new Message(getP2PTxt());
             expect.encode();
@@ -117,6 +108,7 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
                 return result;
             }
 
+            //处理保存字段值
             String propertyStr = "";
             if(!(propertyStr = getPropertyTxt().trim()).equals("")){
                 String[] pNames = propertyStr.split(",");
@@ -142,12 +134,39 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
                 }
             }
 
+            //处理保存body到文件
+            if(getSaveBodyToFile()) {
+                String samplerName = response.getSampleLabel();
+                String time = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
+                        .format(new Date(System.currentTimeMillis()));
+
+                Message req = new Message(response.getSamplerData());
+
+                BufferedOutputStream out = new BufferedOutputStream(
+                        new FileOutputStream(samplerName + ".req." + time));
+                out.write(processHttpBody(req.encode()));
+                out.close();
+
+                out = new BufferedOutputStream(new FileOutputStream(samplerName + ".res." + time));
+                out.write(processHttpBody(resultData));
+                out.close();
+            }
+
         }catch (Exception e){
             //e.printStackTrace();
             result.setFailure(true);
             result.setFailureMessage("异常：" + e.getMessage());
         }
         return result;
+    }
+
+    public byte[] processHttpBody(byte[] data) {
+        int index = BU.findFirst(data, "\r\n\r\n".getBytes());
+        if(index != -1) {
+            index += 4;
+            return BU.subByte(data, index, data.length - index);
+        }
+        return data;
     }
 
     public void setP2PTxt(String hex) {
@@ -166,18 +185,14 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
         return getPropertyAsString("Property.txt");
     }
 
-    // package protected so can be accessed by test class
-    /*
-    static String baMD5Hex(byte ba[]) {
-        byte[] md5Result = {};
+    //供别人调用
+    public void setSaveBodyToFile(boolean saveBodyToFile) {
+        setProperty(new BooleanProperty("SaveBodyToFile", saveBodyToFile));
+    }
 
-        try {
-            MessageDigest md;
-            md = MessageDigest.getInstance("MD5");
-            md5Result = md.digest(ba);
-        } catch (NoSuchAlgorithmException e) {
-            log.error("", e);
-        }
-        return JOrphanUtils.baToHexString(md5Result);
-    }*/
+    //得到值
+    public boolean getSaveBodyToFile() {
+        return getPropertyAsBoolean("SaveBodyToFile");
+    }
+
 }
