@@ -141,14 +141,26 @@ public class P2PAssertion extends AbstractTestElement implements Serializable, A
                         .format(new Date(System.currentTimeMillis()));
 
                 Message req = new Message(response.getSamplerData());
+                byte[] reqBytesData = processHttpBody(req.encode());
 
                 BufferedOutputStream out = new BufferedOutputStream(
                         new FileOutputStream(samplerName + ".req." + time));
-                out.write(processHttpBody(req.encode()));
+                out.write(reqBytesData);
                 out.close();
 
+                out = new BufferedOutputStream(
+                        new FileOutputStream(samplerName + ".req.hex." + time));
+                out.write(BU.bytes2Hex(reqBytesData).getBytes());
+                out.close();
+
+                byte[] resBytesData = processHttpBody(resultData);
+
                 out = new BufferedOutputStream(new FileOutputStream(samplerName + ".res." + time));
-                out.write(processHttpBody(resultData));
+                out.write(resBytesData);
+                out.close();
+
+                out = new BufferedOutputStream(new FileOutputStream(samplerName + ".res.hex" + time));
+                out.write(BU.bytes2Hex(resBytesData).getBytes());
                 out.close();
             }
 
